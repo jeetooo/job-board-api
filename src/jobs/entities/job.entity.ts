@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Application } from '../../applications/entities/application.entity';
 
 @Entity('jobs') // table name = jobs
 export class Job {
@@ -19,6 +20,10 @@ export class Job {
 
   @Column({ nullable: true })
   experience: number;
+
+  // One job has many applications
+  @OneToMany(() => Application, (application) => application.job)
+  applications: Application[];
 
   @CreateDateColumn()
   createdAt: Date;

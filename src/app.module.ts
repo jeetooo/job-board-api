@@ -6,6 +6,10 @@ import { Job } from './jobs/entities/job.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { ApplicationsModule } from './applications/applications.module';
+import { Application } from './applications/entities/application.entity';
+import { BullModule } from '@nestjs/bull';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -22,11 +26,18 @@ import { User } from './users/entities/user.entity';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        entities: [Job, User],
+        entities: [Job, User, Application],
         synchronize: true, // Auto-creates tables — like running migrations automatically
                            // WARNING: set to false in production
       }),
       inject: [ConfigService],
+    }),
+
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
     }),
 
     JobsModule,
@@ -34,6 +45,10 @@ import { User } from './users/entities/user.entity';
     AuthModule,
 
     UsersModule,
+
+    ApplicationsModule,
+
+    MailModule,
   ],
 })
 export class AppModule {}

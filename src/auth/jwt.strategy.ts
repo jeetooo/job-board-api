@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   // This runs after token is verified — attaches user to request
   // Same as auth()->user() in Laravel
-  validate(payload: { sub: number; email: string }) {
-    return { id: payload.sub, email: payload.email };
+  validate(payload: { sub: number; email: string, role: string }) {
+    return { id: payload.sub, email: payload.email, role: payload.role };
   }
 }

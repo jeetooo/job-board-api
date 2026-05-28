@@ -24,10 +24,11 @@ export class AuthService {
       name: dto.name,
       email: dto.email,
       password: hashed,
+      role: dto.role,
     });
 
     // Return token immediately after register
-    return this.signToken(user.id, user.email);
+    return this.signToken(user.id, user.email, user.role);
   }
 
   async login(dto: LoginDto) {
@@ -38,12 +39,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.signToken(user.id, user.email);
+    return this.signToken(user.id, user.email, user.role);
   }
 
   // Generate JWT token — same as JWTAuth::attempt() in Laravel
-  private signToken(userId: number, email: string) {
-    const payload = { sub: userId, email };
+  private signToken(userId: number, email: string, role: string) {
+    const payload = { sub: userId, email, role };
     return {
       access_token: this.jwtService.sign(payload),
     };
